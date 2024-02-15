@@ -2,7 +2,6 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  # Unique name for this DaemonSet
   name: node-labeler
   # Descriptive labels for identification and purpose
   labels:

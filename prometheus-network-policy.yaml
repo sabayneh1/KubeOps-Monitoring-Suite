@@ -1,7 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  # Unique name for this NetworkPolicy
   name: prometheus-network-policy
   # Descriptive labels for identification and understanding
   labels:
@@ -25,5 +24,5 @@ spec:
     #   * **Port 9090:** This is the default port used by Prometheus for scraping metrics.
     #   * **No source restrictions:** By default, this rule allows incoming traffic from any source within the same network namespace or cluster. You can add `from` section to restrict access further (e.g., specific pods, namespaces).
 
-  
+
 # Overall, this NetworkPolicy enhances the security of your Prometheus server by limiting incoming traffic on the specific port used for scraping metrics. Remember to adjust the ingress and egress rules based on your specific security requirements and environment.

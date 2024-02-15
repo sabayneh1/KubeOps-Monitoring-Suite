@@ -2,7 +2,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  # Unique name for this deployment
   name: app-a
   # Additional labels for better classification and filtering
   labels:
