@@ -1,4 +1,4 @@
-//Kubernetes Monitoring Suite with Prometheus and Grafana on AWS EKS
+Kubernetes Monitoring Suite with Prometheus and Grafana on AWS EKS
 
 Description
 
@@ -6,11 +6,11 @@ Enhance your AWS EKS Kubernetes clusters' monitoring capabilities with this robu
 
 Main Features
 
-Pre-configured Kubernetes Manifests: Quick-start your deployments.
-Streamlined Prometheus and Grafana Installation: Easy setup with Helm 3.
-Application Instrumentation Guidance: Implement RED metrics and more.
-Grafana Dashboards Examples: Visualize metrics out of the box.
-Extensive Documentation: For customization and advanced scenarios.
+  Pre-configured Kubernetes Manifests: Quick-start your deployments.
+  Streamlined Prometheus and Grafana Installation: Easy setup with Helm 3.
+  Application Instrumentation Guidance: Implement RED metrics and more.
+  Grafana Dashboards Examples: Visualize metrics out of the box.
+  Extensive Documentation: For customization and advanced scenarios.
 
 Prerequisites
 
