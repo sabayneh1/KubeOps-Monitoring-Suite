@@ -1,4 +1,4 @@
-Kubernetes Monitoring Suite with Prometheus and Grafana on AWS EKS
+//Kubernetes Monitoring Suite with Prometheus and Grafana on AWS EKS
 
 Description
 
