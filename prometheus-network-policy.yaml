@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  # Unique name for this NetworkPolicy
+  name: prometheus-network-policy
+  # Descriptive labels for identification and understanding
+  labels:
+    app: prometheus
+    component: server
+
+spec:
+  # Selects pods labeled with app: prometheus-server
+  podSelector:
+    matchLabels:
+      app: prometheus-server
+
+  # Ingress rules controlling incoming traffic to the Prometheus server
+  ingress:
+  - # This rule allows incoming TCP traffic on port 9090
+    ports:
+    - protocol: TCP
+      port: 9090
+    # Explanation:
+    #   * **TCP protocol:** Prometheus typically uses TCP for communication.
+    #   * **Port 9090:** This is the default port used by Prometheus for scraping metrics.
+    #   * **No source restrictions:** By default, this rule allows incoming traffic from any source within the same network namespace or cluster. You can add `from` section to restrict access further (e.g., specific pods, namespaces).
+
+  
+# Overall, this NetworkPolicy enhances the security of your Prometheus server by limiting incoming traffic on the specific port used for scraping metrics. Remember to adjust the ingress and egress rules based on your specific security requirements and environment.

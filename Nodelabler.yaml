@@ -1,0 +1,82 @@
+# DaemonSet manifest for labeling all nodes in the cluster
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  # Unique name for this DaemonSet
+  name: node-labeler
+  # Descriptive labels for identification and purpose
+  labels:
+    app: node-labeler
+    purpose: node-labeling
+
+spec:
+  # Selector to identify pods belonging to this DaemonSet
+  selector:
+    matchLabels:
+      name: node-labeler
+
+  # Pod template for the DaemonSet
+  template:
+    metadata:
+      # Labels for identification and grouping
+      labels:
+        name: node-labeler
+
+    spec:
+      # Tolerations to run on nodes with taints (e.g., NoSchedule)
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+
+      # Containers definition
+      containers:
+      - name: node-labeler
+        # Image used for the container
+        image: k8s.gcr.io/sig-storage/node-labeler:v0.4.0
+        # Environment variables for labeling configuration
+        env:
+        - name: NODE_LABEL
+          value: failure-domain.beta.kubernetes.io/zone
+          # Sets the zone label on nodes
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: aws-region
+              key: AWS_REGION
+          # Reads the AWS region from a ConfigMap
+        # Mounts for accessing resources
+        volumeMounts:
+        - name: metadata
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          readOnly: true
+          # Mounts service account token for authentication
+        - name: time
+          mountPath: /var/run/time
+          # Mounts system time information for time-based operations
+      # Volumes configuration
+      volumes:
+      - name: metadata
+        hostPath:
+          path: /var/run/secrets/kubernetes.io/serviceaccount
+          type: ""
+          # Mounts the service account token from the host node
+      - name: time
+        hostPath:
+          path: /etc/localtime
+          type: ""
+          # Mounts system time information from the host node
+
+# This ensures the DaemonSet runs on all nodes in the cluster,
+# even if they have taints that would reject normal pods.
+
+'''
+# Explanation:
+- This manifest defines a DaemonSet named "node-labeler" that runs
+  on all nodes in the cluster.
+- It uses tolerations to allow running on nodes with taints.
+- The container labels nodes with the specified label and value.
+- Environment variables and ConfigMap access configure the labeling process.
+- Volume mounts provide necessary information for authentication and time-based operations.
+
+Remember, this is a simplified example and you might need adjustments based on your specific needs and environment.
+'''

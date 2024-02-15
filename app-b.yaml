@@ -1,0 +1,74 @@
+# Deployment manifest for Application B
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Unique name for this deployment
+  name: app-b
+
+spec:
+  # Number of replicas to run
+  replicas: 3
+
+  # Selector to identify pods belonging to this deployment
+  selector:
+    matchLabels:
+      app: app-b
+
+  # Pod template for the deployment
+  template:
+    metadata:
+      # Labels for identification and grouping
+      labels:
+        app: app-b
+        type: application-B
+
+    spec:
+      # Containers definition
+      containers:
+      - name: app-b
+        # Image used for the container
+        image: nginx
+        # Other container specific configurations (not provided in the snippet)
+        ports:
+        # Port exposed by the container (typically Nginx default port)
+        - containerPort: 80
+
+        # Affinity configuration for pod placement
+        affinity:
+          # Avoid scheduling pods on the same node unless necessary
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: type
+                  operator: In
+                  values:
+                  - application-B
+              topologyKey: "kubernetes.io/hostname"
+          # Schedule pods only on specific nodes
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: type
+                  operator: NotIn
+                  values:
+                  - application-B
+                - key: "kubernetes.io/hostname"
+                  operator: In
+                  values:
+                  - node1
+                  - node2
+                  - node3
+
+'''
+# Explanation:
+# - This manifest defines a deployment for an application named "app-b".
+# - It runs 3 replicas using the Nginx image.
+# - Labels are used to identify pods and group them logically.
+# - The `affinity` section specifies how pods should be placed on nodes:
+#     - `podAntiAffinity`: Avoids placing pods with the same type (application-B) on the same node unless necessary.
+#     - `nodeAffinity`: Ensures pods are only scheduled on specific nodes (node1, node2, node3) and avoids nodes with type "application-B".
+
+# Please note that this is a simplified example and you might need to adjust it based on your specific needs and environment.
+'''

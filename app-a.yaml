@@ -1,0 +1,92 @@
+# Deployment manifest for Application A
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Unique name for this deployment
+  name: app-a
+  # Additional labels for better classification and filtering
+  labels:
+    # Application name
+    app: app-a
+    # Project affiliation
+    part-of: demo-project
+
+spec:
+  # Number of replicas to run
+  replicas: 3
+
+  # Selector to identify pods belonging to this deployment
+  selector:
+    matchLabels:
+      app: app-a
+
+  # Pod template for the deployment
+  template:
+    metadata:
+      # Labels for identification and grouping
+      labels:
+        app: app-a
+        type: application-A
+
+    spec:
+      # Containers definition
+      containers:
+      - name: app-a
+        # Image used for the container
+        image: nginx
+        # Port exposed by the container
+        ports:
+        - containerPort: 80
+        # Resource requests and limits to ensure Quality of Service (QoS)
+        resources:
+          limits:
+            # Maximum allowed CPU resources
+            cpu: "500m"
+            # Maximum allowed memory resources
+            memory: "256Mi"
+          requests:
+            # Minimum guaranteed CPU resources
+            cpu: "250m"
+            # Minimum guaranteed memory resources
+            memory: "128Mi"
+
+        # Affinity configuration for pod placement
+        affinity:
+          # Avoid scheduling pods on the same node unless necessary
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: type
+                  operator: In
+                  values:
+                  - application-A
+              topologyKey: "kubernetes.io/hostname"
+          # Schedule pods only on specific nodes
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: type
+                  operator: NotIn
+                  values:
+                  - application-A
+                - key: "kubernetes.io/hostname"
+                  operator: In
+                  values:
+                  - node1
+                  - node2
+                  - node3
+
+'''
+Explanation:
+- This manifest defines a deployment for an application named "app-a" associated with the "demo-project".
+- It runs 3 replicas using the Nginx image.
+- Detailed labels enhance identification and management.
+- Resource limits and requests ensure performance and stability.
+- The `affinity` section specifies how pods should be placed on nodes:
+    - `podAntiAffinity`: Like in the previous example, avoids placing pods with the same type (application-A) on the same node.
+    - `nodeAffinity`: Ensures pods are only scheduled on specific nodes (not provided in this snippet) and avoids nodes with type "application-A".
+
+Remember, this is a simplified example and might need adjustments based on your specific needs and environment.
+'''
